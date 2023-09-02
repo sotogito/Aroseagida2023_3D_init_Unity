@@ -4,41 +4,46 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+#region Draw.cs 주요 기능
+/*
+    1. Draw(그림 데이터를 생성하는 곳) & Drawn(생성된 그림데이터를 불러오는 곳)에서 사용되는 스크립트
+    2. Line Renderer를 이용해 3D 그림그리기 구현ㄴ
+*/
+#endregion
+
 namespace Letter
 {
     public class Draw : MonoBehaviour
     {
-    //따로 작성한 뒤 D.M처럼 ㅇ니스턴스 생성해서 받는게 깔끔할 거 같음
-        #region 편지 띄우는 ui
+        #region 변수
         public Text draw_LetterText;
         public Text draw_LetterNum;
-        #endregion
-        //DataManager로 넘기기 전 임의의 list 생성
+
+        //DataManager로 넘기기 전 Line Renderer Position값을 받는 임의의 list 생성
         List<DrawnInfo> tempDrawnLines = new List<DrawnInfo>(); 
 
+            //3D 그림그리기에 사용된 변수들
         List<Vector3> linePoints;
         float timer;
         public float timerdelay;
-
         GameObject newLine;
-        LineRenderer drawLine;
+        LineRenderer drawLine; //선 하나당 좌표값이 저장되는 곳
         public float lineWidth;
+        public GameObject drawingObject; //선이 렌더링되어 나오는 곳. 펜 오브젝트
+        public FlexibleColorPicker flexibleColorPicker; //Color Picker 팔레트
 
-        //팬촉 오브젝트 넣어야됨
-        public GameObject drawingObject;
-
-        public FlexibleColorPicker flexibleColorPicker;
         public Canvas ColorPickerUi;
 
-
+            //Ui 사용자 앞에 띄우기
         public Transform head;
         public float spawnDistance = 2;
+
+        #endregion
 
 
         void Start()
         {            
             ColorPickerUi.gameObject.SetActive(false);
-
 
             linePoints = new List<Vector3>();
             timer = timerdelay;
@@ -46,48 +51,43 @@ namespace Letter
             //편지 ui
             draw_LetterText.text = DataManager.instance.nowPlayer.LetterText;
             draw_LetterNum.text = DataManager.instance.nowPlayer.LetterNum+"번째 편지";
-
-            //tempDrawnLines = new List<DrawnInfo>();
-            //tempDrawnLines = DataManager.instance.nowPlayer.DrawnLines;
             
-            //일단 데이터가 있으면 그림그림
+            // 데이터가 있으면 그림그림
             LoadLines(DataManager.instance.nowPlayer.DrawnLines.ToArray());
-        
         }
 
-        // Update is called once per frame
+
         void Update()
         { 
-
+            #region 팔레트 Ui 띄우기
             if(Input.GetKeyDown(KeyCode.Space))
             {   
                 ColorPickerUi.gameObject.SetActive(true);
                 ColorPickerUi.transform.position = head.position + new Vector3(head.forward.x, 0,head.forward.z).normalized * spawnDistance;
             }
             ColorPickerUi.transform.LookAt(new Vector3(head.position.x, ColorPickerUi.transform.position.y, head.position.z));
+
             if(Input.GetKeyUp(KeyCode.Space))
             {
                 ColorPickerUi.gameObject.SetActive(false);
             }
+            #endregion
+
 
             #region 그림그리기 코드
-            if(Input.GetKeyDown(KeyCode.E))             //마우스를 누를 때 -> 이때 저장 시작, Color를 받음
+            if(Input.GetKeyDown(KeyCode.E))             //마우스를 누를 때 -> 선 하나의 Position & Color
             {
-                //Material도 따로 지정해줘야됨
-                //Debug.Log(linePoints.Count);
                 newLine = new GameObject();
                 drawLine = newLine.AddComponent<LineRenderer>();
-                drawLine.material = new Material(Shader.Find("Sprites/Default"));
-                //Color c = randomColor();
+                drawLine.material = new Material(Shader.Find("Sprites/Default"));  //펜 Material 지정 해줘야함!!!!!!!!!!!!!!!!!!1
                 drawLine.startColor = flexibleColorPicker.color;
                 drawLine.endColor = flexibleColorPicker.color;
-                //drawLine.material.color = flexibleColorPicker.color;
                 drawLine.startWidth = lineWidth;
                 drawLine.endWidth = lineWidth;
 
             }
             
-            if(Input.GetKey(KeyCode.E))               //마우스를 누르는 동안   -> 값을 계속 받음
+            if(Input.GetKey(KeyCode.E))               //마우스를 누르는 동안   -> 변하는 데이터를 받음, Position 값 Update됨
             {
                 //마우스의 위치에 따라서 선이 생겨 따라옴
                 Debug.DrawRay(Camera.main.ScreenToWorldPoint(Input.mousePosition), GetMousePosition(),Color.red);
@@ -102,10 +102,9 @@ namespace Letter
                 }
             }
 
-            if(Input.GetKeyUp(KeyCode.E))           //마우스를 누르는 동안  -> 이때 저장완료 집어 넣으면 됨
+            if(Input.GetKeyUp(KeyCode.E))           //마우스를 떌 떄  ->  생성된 선 하나(New Game Object)의 데이터 임시저장
             {
                 /*
-                #region 선 하나당 linePoints에 저장된 Vector3, 사용도니 Color 출력 = JSON에 저장될 데이터는 이렇게 저장하면 됨
                 foreach (Vector3 point in linePoints)
                 {
                     Debug.Log("X: " + point.x + ", Y: " + point.y + ", Z: " + point.z);
@@ -121,7 +120,6 @@ namespace Letter
                     Color = flexibleColorPicker.color
                 };
                 tempDrawnLines.Add(drawninfo);
-            
 
                 linePoints.Clear();
             }
@@ -129,7 +127,7 @@ namespace Letter
         
         }
 
-        Vector3 GetMousePosition()
+        Vector3 GetMousePosition() //그림이 나오는 곳
         {
             /*
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -138,28 +136,31 @@ namespace Letter
             return drawingObject.transform.position;
         }
 
-        //저장하기 버튼을 누르면 LetterText데이터를 업데이트하고 Main 씬으로 이동, 
-        public void Save()
+     
+        public void Save() //[저장하고 나가기] Draw 씬에서만 활용
         {
-            DataManager.instance.nowPlayer.LetterText += "한번 저장된 데이터입니다";
-            //임의의 list를 D.M 으로 넘기기ㄴ
+                //임시로 저장했던 Line Renderer 데이터를 DataManager로 넘김
             DataManager.instance.nowPlayer.DrawnLines = tempDrawnLines;
-            SceneManager.LoadScene(0);
             DataManager.instance.SaveData();
+            SceneManager.LoadScene(0);
         }
-        public void Out()
+
+
+        #region Drawn 씬
+
+        public void Out() //[나가기] Drawn 씬에서만 활용
         {
             SceneManager.LoadScene(0);
         }
 
-        public void LoadLines(DrawnInfo[] drawnInfos)
+        public void LoadLines(DrawnInfo[] drawnInfos) //그림 불러오기
         {
-            // 저장된 그림 정보를 이용하여 화면에 그리는 작업 수행
+            // 저장된 그림 정보를 이용하여 화면에 불러오는 작업 수행
             foreach (DrawnInfo drawnInfo in drawnInfos)
             {
                 GameObject newLine = new GameObject();
                 LineRenderer drawLine = newLine.AddComponent<LineRenderer>();
-                drawLine.material = new Material(Shader.Find("Sprites/Default"));
+                drawLine.material = new Material(Shader.Find("Sprites/Default")); //펜 Material 지정 해줘야함!!!!!!!!!!!!!!!!!!1
                 drawLine.startColor = drawnInfo.Color;
                 drawLine.endColor = drawnInfo.Color;
                 drawLine.startWidth = lineWidth;
@@ -168,7 +169,9 @@ namespace Letter
                 drawLine.SetPositions(drawnInfo.Points);
             }
         }
+        #endregion
     }
+
     [System.Serializable]
     public class DrawnInfo
     {
