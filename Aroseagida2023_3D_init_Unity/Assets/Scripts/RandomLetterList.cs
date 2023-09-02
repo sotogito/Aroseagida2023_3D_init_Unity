@@ -10,7 +10,7 @@ namespace Letter
         #region Option
         public List<string> ageOptions = new List<string>
 		{
-			"지금까지","최근에"
+			"지금까지","최근에" //사용자 나이를 받아 추가
 		};
         private string[] whenOptions1 = new string[]
 		{
@@ -34,6 +34,7 @@ namespace Letter
 		};
         #endregion
 
+
         #region level에 따른 RandomLevel, OptionRange, RandomOption 지정
         public int randomOption;
         public int randomLevel;
@@ -41,6 +42,7 @@ namespace Letter
         {
             randomOption = 0;
             randomLevel = 0;
+
             if(qtype == 0)
             {
                 if(level <=2)
@@ -63,7 +65,7 @@ namespace Letter
                 int whoOptionsRange = whoOptions.Length;
                 int whereOptionsRange = whereOptions.Length;
 
-                //level에 따라서 option Random 범위 조정
+                //level에 따라서 option Random 범위 조정 - 난이도 조정
                 if(level == 1)
                 {
                     ageOptionsRange = (int)(ageOptions.Count * 0.2);
@@ -91,7 +93,7 @@ namespace Letter
 
                 }
 
-                //rLevel에 따라서 RandomQuestion의 option index값 지정
+                //Level의 랜덤값에 따라서 RandomQuestion의 option index값 지정 
                 if(randomLevel == 0)
                 {
                     randomOption = UnityEngine.Random.Range(0,ageOptionsRange);
@@ -115,6 +117,7 @@ namespace Letter
             }
         }
         #endregion
+
 
         #region 지정된 함수 4개에 따른 Question 생성
         public string[] question;
@@ -177,6 +180,7 @@ namespace Letter
                 }
             }
             #endregion
+            
             #region QuestionType 1 : optioin이 있는 질문
             if(qtype == 1)
             {

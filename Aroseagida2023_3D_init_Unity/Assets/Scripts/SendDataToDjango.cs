@@ -1,9 +1,14 @@
-// Unity C# Script
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+
+#region SendDataToDjango.cs의 주요기능
+/*
+    1. RandomLetter.cs에서 생성된 질문을 서버로 넘김
+    2. 질문 중복 판별
+*/
+#endregion
 
 namespace Letter
 {
@@ -46,18 +51,16 @@ namespace Letter
 
             if (request.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log("Data sent to Django successfully.");
-                print(randomLetter.LetterText +"중복이 아닌 질문xxxxxxxxx");
+                //Debug.Log("Data sent to Django successfully.");
+                print(randomLetter.LetterText +"중복이 아닌 질문");
             }
             else
             {
-                Debug.LogError("Failed to send data to Django: " + request.error);
-                print(randomLetter.LetterText +"중복인 질문ooooooo");
-                if (request.responseCode == 400)
+                //Debug.LogError("Failed to send data to Django: " + request.error);
+                //print(randomLetter.LetterText +"중복인 질문");
+                if (request.responseCode == 400) 
                 {
-                    // 중복이면 RandomLetter 클래스의 MakeLetter 메서드 호출
-                    //print("-----------중복되어 다시생성");
-                    randomLetter.MakeLetter();
+                    randomLetter.MakeLetter(); //중복일 시 질문 다시생성
                 }
             }
         }

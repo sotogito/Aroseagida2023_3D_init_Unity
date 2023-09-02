@@ -4,6 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
 
+#region DataManager.cs 주요 기능
+/*
+    1. 저장할 한묶음의 데이터들을 모아둠
+    2. 저장하기
+    3. 불러오기
+    4. 데이터클리어
+*/
+#endregion
+
 namespace Letter
 {
     public class PlayerData
@@ -11,18 +20,24 @@ namespace Letter
         public bool IsDrawn;
         public string LetterText;
         public int LetterNum;
-        //Draw에서 받아올 Trail Renderer - posiotion 함수
-        //Draw에서 받아올 Trail Renderer - color 함수
         public List<DrawnInfo> DrawnLines;
     }
+
     public class DataManager : MonoBehaviour
     {
-        public static DataManager instance; //DataManager 인스턴스
-        public PlayerData nowPlayer = new PlayerData(); //PlayerData인스턴스
+        #region 인스턴스 및 변수
+
+        public static DataManager instance; 
+        public PlayerData nowPlayer = new PlayerData(); 
+
 
         //데이터가 저장된 경로 = path+nowSlot
         public string path;
         public int nowSlot;
+
+        public bool GameStart;
+        #endregion
+
 
         private void Awake()
         {
@@ -42,13 +57,8 @@ namespace Letter
             print(path);
         }
 
-        void Start()
-        {
-         
-        }
-
         
-        #region SaveData(), LoadData(), DataClear() 저장하기,불러오기,데이터클리어
+        #region SaveData(), LoadData(), DataClear() - 저장하기,불러오기,데이터클리어
         public void SaveData() //저장하기 함수
         {
             string data = JsonUtility.ToJson(nowPlayer);
@@ -60,9 +70,8 @@ namespace Letter
             nowPlayer = JsonUtility.FromJson<PlayerData>(data);
         }
 
-        public void DataClear()
+        public void DataClear() //데이터클리어
         {
-            print("초기화 되었습니다");
             nowSlot = -1;
             nowPlayer = new PlayerData();
         }

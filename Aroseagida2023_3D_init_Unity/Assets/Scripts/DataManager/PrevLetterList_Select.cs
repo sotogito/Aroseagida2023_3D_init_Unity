@@ -6,6 +6,13 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using UnityEngine.Networking;
 
+#region PrevLetterList_Select.cs 주요 기능
+/*
+    2. [편지보기] -> [그림그리기] & [넘어가기] 버튼
+    3. [그림그리기] -> 서버에서 최근 편지 10개 받아오기
+    4. [넘어가기] -> 서버로 is_active 필드값 변경 요청(true기본값 -> fasle)
+*/
+#endregion
 
 namespace Letter
 {
@@ -13,25 +20,19 @@ namespace Letter
     {   
         private const string DjangoApiUrl = "http://127.0.0.1:8000/api/get_prevletter_list/";
 
-        //인스턴스 생성
-        public static PrevLetterList_Select instance; 
 
-        #region 변수들
-        
-        //각 button과 text의 값을 지정해준다. 
+        #region 변수 & Ui
+
+        //클릭된 버튼의 값 = index값
         public int BtnNum;
+
         public Text[] BtnText;
     
-        //서버에서 받아온 데이터를 저장하는 곳
+        //서버에서 받아온 데이터를 임시 저장하는 곳
         public string[] PrevLetter_text;
         public int[] PrevLetter_id;
-
-        //그림을 다 그렸나 안그렸나, 저장된 데이터의 편지인가 아닌가를 판별
-        bool[] isActive = new bool[10];
-
-
-        public int nowBtnNum;
   
+        //[그림그리기]&[넘어가기] 버튼
         public Button drawButton;
         public Button skipButton;
 
@@ -40,70 +41,70 @@ namespace Letter
      
         void Start()
         {
-            StartCoroutine(GetPrevLetterList());
             drawButton.gameObject.SetActive(false);
             skipButton.gameObject.SetActive(false);
         }
 
-        //클릭된 LetterList 버튼의 index값을 받음
-        public void nowClick(int btnnum)
+
+        public void nowClick(int btnnum) //클릭된 LetterList 버튼의 값을 index로 받음
         {
             BtnNum = btnnum;
-            print(BtnNum);
 
-            print(PrevLetter_text[BtnNum]);
-            print(PrevLetter_id[BtnNum]);
+            print("버튼의 index값 : " + BtnNum);
+            print("편지 text : " + PrevLetter_text[BtnNum]);
+            print("편지 id : " + PrevLetter_id[BtnNum]);
 
-            //버튼 실행
             drawButton.gameObject.SetActive(true);
             skipButton.gameObject.SetActive(true);
-    
         }
 
+
         #region 버튼ui에 지정할 Function
-        #region [그림그리기]
+
         public void nowDraw() //[그림그리기]
         {
+            //DataManager로 선택된 편지 데이터 옮기기
             DataManager.instance.nowPlayer.LetterNum = PrevLetter_id[BtnNum];
             DataManager.instance.nowPlayer.LetterText = PrevLetter_text[BtnNum];
             DataManager.instance.nowPlayer.IsDrawn = true;
             
-
-            print("PrevLetterList_Select"+DataManager.instance.nowPlayer.LetterNum);
-            print("해당 버튼의 index값  :  "+BtnNum);
             DataManager.instance.test();
-            print("현재 데이터의 nowSlot은 "+DataManager.instance.nowSlot);
+            
             DataManager.instance.SaveData();
             GoDraw();
         }
 
-        #endregion
-        #region [넘어가기]
         public void nowSkip() //[넘어가기]
         {
-            print("해당 버튼의 index값  :  "+BtnNum);
-            print("넘어가기를 선택하셨습니다");
+            //is_active 필드 값 변경 true -> false
             StartCoroutine(UpdateIsActve(PrevLetter_id[BtnNum]));
             BtnText[BtnNum].text = "삭제 되었습니다";
         }
+        
         #endregion
-        #endregion
+
 
         public void GoDraw() //draw 씬으로 이동
         {
-            print("여기에 이동하면 됨");
             SceneManager.LoadScene(3);
         }
 
 
-         public void MakeLetterList()
+        public void MakeLetterList() //서버에서 받은 10개의 데이터 편지 List로 띄우기
         {
+            //BtnNum(버튼의Num) = 배열의 index
             for(int i = PrevLetter_id.Length-1; i>=0; i--)
             {
                 BtnText[i].text = PrevLetter_text[i];
             }
         }
 
+
+        public void ReadingLetters() //[편지보기] 버튼 클릭 시 (MakeLetter() -> GetPrevLetterList())
+        {
+            //서버에서 PrevLetter 최근 데이터 10개 받아오기
+            StartCoroutine(GetPrevLetterList());
+        }
 
 
         #region GetPrevLetterList()+[System.Serializable]
@@ -160,7 +161,6 @@ namespace Letter
             }
         }
         #endregion
-
 
     }
 }
