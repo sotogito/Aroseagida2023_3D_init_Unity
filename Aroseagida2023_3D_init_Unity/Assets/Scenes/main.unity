@@ -1806,6 +1806,7 @@ MonoBehaviour:
   - {fileID: 892363148}
   - {fileID: 720951426}
   savefile: 0000000000
+  ScreenShotImg: []
 --- !u!223 &391197048
 Canvas:
   m_ObjectHideFlags: 0
@@ -4227,6 +4228,12 @@ MonoBehaviour:
   - {fileID: 97541098}
   - {fileID: 1376559675}
   savefile: 0000000000
+  ScreenShotImg:
+  - {fileID: 1431981379}
+  - {fileID: 2055955707}
+  - {fileID: 872843880}
+  - {fileID: 61662557}
+  - {fileID: 1971011747}
 --- !u!114 &834206863
 MonoBehaviour:
   m_ObjectHideFlags: 0

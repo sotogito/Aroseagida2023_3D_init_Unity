@@ -354,12 +354,12 @@
 "Assets/Scripts/DataManager/ExhibitList_Select.cs"
 "Assets/Scripts/DataManager/PrevLetterList_Select.cs"
 "Assets/Scripts/MailBox.cs"
+"Assets/Scripts/MakeLetter/RandomLetter.cs"
+"Assets/Scripts/MakeLetter/RandomLetterList.cs"
+"Assets/Scripts/MakeLetter/SendDataToDjango.cs"
 "Assets/Scripts/MoveAndDraw/MouseholdDraw.cs"
 "Assets/Scripts/MoveAndDraw/Movement.cs"
-"Assets/Scripts/RandomLetter.cs"
-"Assets/Scripts/RandomLetterList.cs"
-"Assets/Scripts/SendDataToDjango.cs"
-"Assets/Scripts/Test Scripts/ScreenShot.cs"
+"Assets/Scripts/ScreenShot.cs"
 -langversion:9.0
 
 /deterministic

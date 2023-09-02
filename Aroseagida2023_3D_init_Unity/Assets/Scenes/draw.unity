@@ -477,7 +477,6 @@ GameObject:
   - component: {fileID: 258095423}
   - component: {fileID: 258095422}
   - component: {fileID: 258095424}
-  - component: {fileID: 258095425}
   m_Layer: 0
   m_Name: "DrawLines \uC2A4\uD06C\uB9BD\uD2B8"
   m_TagString: Untagged
@@ -535,18 +534,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPen: {fileID: 230391215}
   playerPenPoint: {fileID: 823838279}
---- !u!114 &258095425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 258095421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f1b80b8e34714239bf8a37a5a4ce5b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &348085236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2005,7 +1992,6 @@ GameObject:
   - component: {fileID: 1940491235}
   - component: {fileID: 1940491238}
   - component: {fileID: 1940491237}
-  - component: {fileID: 1940491236}
   m_Layer: 0
   m_Name: Trail
   m_TagString: Untagged
@@ -2028,18 +2014,6 @@ Transform:
   m_Father: {fileID: 823838280}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1940491236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1940491234}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f1b80b8e34714239bf8a37a5a4ce5b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1940491237
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ using System.IO;
 /*
     1. 전시List 띄우기
     2. nowSlot 랜덤생성 후 할당
+    3. ScreenShot.cs에서 캡쳐한 사진을 업로드함
 */
 #endregion
 
@@ -27,7 +28,11 @@ namespace Letter
         public bool[] savefile = new bool[5];
         //비어있는 데이터의 nowSlot값을 저장
         List<int> falseIndexes = new List<int>(); 
+
+        //캡쳐이미지 업로드 panel
+        public Image[] ScreenShotImg;
         #endregion
+    
 
 
         void Start()
@@ -46,6 +51,7 @@ namespace Letter
                     SlotText_LetterNum[i].text = DataManager.instance.nowPlayer.LetterNum + "번째 편지";
                     //print(SlotText_LetterText[i].text);
                     //print(SlotText_LetterNum[i].text);
+                    UploadScreenShotImg(i);
                 }
                 else
                 {
@@ -56,6 +62,24 @@ namespace Letter
             DataManager.instance.DataClear(); 
             #endregion
             MakenowSlot();
+
+        }
+
+        public void UploadScreenShotImg(int NowSlot)
+        {
+            string fileName ="_Screenshot_" + NowSlot + ".png";
+            string screenshotPath = Application.persistentDataPath +  "/AROSEAGIDA SAVE" + fileName;
+
+            if(System.IO.File.Exists(screenshotPath))
+            {
+                byte[] imageDate = System.IO.File.ReadAllBytes(screenshotPath);
+                Texture2D texture = new Texture2D(2,2);
+                texture.LoadImage(imageDate);
+
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+                ScreenShotImg[NowSlot].sprite = sprite;
+            }
         }
 
 
